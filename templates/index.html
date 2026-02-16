@@ -5,12 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XKCD Comic Viewer</title>
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: Arial, sans-serif;
@@ -29,15 +26,9 @@
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        h1 {
-            color: #333;
-            margin-bottom: 10px;
-        }
+        h1 { color: #333; margin-bottom: 10px; }
 
-        .subtitle {
-            color: #666;
-            font-size: 0.9em;
-        }
+        .subtitle { color: #666; font-size: 0.9em; }
 
         .comic-container {
             background-color: #fff;
@@ -47,24 +38,11 @@
             text-align: center;
         }
 
-        .comic-title {
-            font-size: 1.8em;
-            color: #333;
-            margin-bottom: 10px;
-        }
+        .comic-title { font-size: 1.8em; color: #333; margin-bottom: 10px; }
 
-        .comic-number {
-            color: #666;
-            font-size: 0.9em;
-            margin-bottom: 20px;
-        }
+        .comic-number { color: #666; font-size: 0.9em; margin-bottom: 20px; }
 
-        .comic-image {
-            max-width: 100%;
-            height: auto;
-            margin: 20px 0;
-            border: 1px solid #ddd;
-        }
+        .comic-image { max-width: 100%; height: auto; margin: 20px 0; border: 1px solid #ddd; }
 
         .comic-alt {
             font-style: italic;
@@ -76,11 +54,7 @@
             text-align: left;
         }
 
-        .comic-date {
-            color: #888;
-            font-size: 0.9em;
-            margin-top: 15px;
-        }
+        .comic-date { color: #888; font-size: 0.9em; margin-top: 15px; }
 
         .error-message {
             background-color: #ffe6e6;
@@ -91,12 +65,7 @@
             margin: 20px 0;
         }
 
-        .navigation {
-            margin-top: 20px;
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
+        .navigation { margin-top: 20px; display: flex; gap: 10px; justify-content: center; }
 
         .btn {
             background-color: #96ceb4;
@@ -110,29 +79,24 @@
             font-size: 1em;
         }
 
-        .btn:hover {
-            background-color: #88c0a0;
-        }
+        .btn:hover { background-color: #88c0a0; }
 
-        .btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-        }
+        .btn:disabled { background-color: #ccc; cursor: not-allowed; }
 
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            color: #666;
-            font-size: 0.9em;
-        }
+        footer { margin-top: 30px; text-align: center; color: #666; font-size: 0.9em; }
 
-        footer a {
-            color: #96ceb4;
-            text-decoration: none;
-        }
+        footer a { color: #96ceb4; text-decoration: none; }
 
-        footer a:hover {
-            text-decoration: underline;
+        footer a:hover { text-decoration: underline; }
+
+        .search-box { margin-top: 20px; display: flex; justify-content: center; gap: 10px; }
+
+        .search-input {
+            padding: 10px;
+            font-size: 16px;
+            width: 220px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
         }
     </style>
 </head>
@@ -145,14 +109,12 @@
 
     <main>
         {% if error %}
-        <!-- Display error message if something went wrong -->
         <div class="error-message">
             <strong>Error:</strong> {{ error }}
         </div>
         {% endif %}
 
         {% if comic %}
-        <!-- Display the comic if we successfully fetched it -->
         <div class="comic-container">
             <h2 class="comic-title">{{ comic.title }}</h2>
             <p class="comic-number">Comic #{{ comic.num }}</p>
@@ -166,10 +128,33 @@
             <p class="comic-date">
                 Published: {{ comic.month }}/{{ comic.day }}/{{ comic.year }}
             </p>
-            <!-- TODO: Add any buttons for navigation, random, or form to fetch comics -->
+
+            <!-- Search Form -->
+            <div class="search-box">
+                <form action="/comic" method="get">
+                    <input class="search-input" type="number" name="comic_num" min="1" placeholder="Enter comic number">
+                    <button type="submit" class="btn">Search</button>
+                </form>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="navigation">
+                {% if comic.num > 1 %}
+                <a class="btn" href="/comic/{{ comic.num - 1 }}">Previous</a>
+                {% else %}
+                <button class="btn" disabled>Previous</button>
+                {% endif %}
+
+                {% if comic.num < latest_num %}
+                <a class="btn" href="/comic/{{ comic.num + 1 }}">Next</a>
+                {% else %}
+                <button class="btn" disabled>Next</button>
+                {% endif %}
+            </div>
         </div>
         {% endif %}
     </main>
+
     <footer>
         <p>Comics from <a href="https://xkcd.com" target="_blank">xkcd.com</a> by Randall Munroe</p>
         <p>Created for IT Capstone - Week 4 Assignment</p>
